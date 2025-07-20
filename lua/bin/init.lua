@@ -5,7 +5,8 @@ local api = vim.api
 local config = {
     patterns = { "*" }, -- use to filter by filetype eg. *.dll, *.so
     xxd_cols = 32,
-    auto_hex_view = true
+    auto_hex_view = true,
+    keymap = { lhs = '<leader>bh', mode = 'n', desc = 'Toggle hex view' }
 }
 
 local function is_binary_file(bufnr)
@@ -64,9 +65,11 @@ local function setup_autocmds()
         pattern = config.patterns,
         callback = function(ev)
             if (is_binary_file(ev.buf)) then
+                vim.keymap.set(config.keymap.mode, config.keymap.lhs, M.toggle_hex, { buffer = ev.buf, silent = true })
+
                 api.nvim_buf_create_user_command(ev.buf, 'BinaryHexToggle', function()
                     M.toggle_hex()
-                end, { desc = "Toggle hex view for binary file" })
+                end, { desc = config.keymap.desc })
 
                 if (config.auto_hex_view) then
                     to_hex_view(ev.buf)
