@@ -64,8 +64,6 @@ local function setup_autocmds()
         pattern = config.patterns,
         callback = function(ev)
             if (is_binary_file(ev.buf)) then
-                vim.keymap.set('n', '<leader>bh', M.toggle_hex, { buffer = ev.buf, silent = true })
-
                 api.nvim_buf_create_user_command(ev.buf, 'BinaryHexToggle', function()
                     M.toggle_hex()
                 end, { desc = "Toggle hex view for binary file" })
